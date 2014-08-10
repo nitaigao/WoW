@@ -9,7 +9,7 @@ App.prototype.init = function(canvas) {
   this.renderer.init();
 
   var self = this;
-  $.get("/data/models/plane.json", function(data) {
+  $.get("/data/models/cube.json", function(data) {
     var mesh = new Mesh();
     mesh.init(self.renderer, data.vertices, data.normals, data.indices);
     self.scene.addNode(mesh);
