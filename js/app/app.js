@@ -7,13 +7,10 @@ function App() {
 App.prototype.init = function(canvas) {
   this.renderer = new WebGLRenderer(canvas);
   this.renderer.init();
+}
 
-  var self = this;
-  $.get("/data/models/cube.json", function(data) {
-    var mesh = new Mesh();
-    mesh.init(self.renderer, data.vertices, data.normals, data.indices);
-    self.scene.addNode(mesh);
-  });
+App.prototype.loadScene = function(path) {
+  this.scene.load(path, this.renderer);
 }
 
 App.prototype.render = function() {
