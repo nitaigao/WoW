@@ -23,6 +23,15 @@ function FlyControls(camera) {
       self.strafeRight = false;
       // self.rotateRight = false;
     }
+
+    if (event.keyCode == 81) {
+      self.moveDown = false;
+    }
+
+    if (event.keyCode == 69) {
+      self.moveUp = false;
+    }
+
   });
 
   $("body").keydown(function(event) {
@@ -43,6 +52,15 @@ function FlyControls(camera) {
       self.strafeRight = true;
       // self.rotateRight = true;
     }
+
+    if (event.keyCode == 81) {
+      self.moveDown = true;
+    }
+
+    if (event.keyCode == 69) {
+      self.moveUp = true;
+    }
+
   });
 
   var self = this;
@@ -73,6 +91,16 @@ FlyControls.prototype.update = function(dt) {
 
   if (this.moveBackward) {
     var backward = [0, 0, 1 * dt * 10];
+    this.camera.translate(backward);
+  }
+
+  if (this.moveUp) {
+    var forward = [0, 1 * dt * 10, 0];
+    this.camera.translate(forward);
+  }
+
+  if (this.moveDown) {
+    var backward = [0, -1 * dt * 10, 0];
     this.camera.translate(backward);
   }
 
