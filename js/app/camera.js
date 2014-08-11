@@ -5,10 +5,15 @@ function Camera() {
 
 Camera.prototype.view = function() {
   var view = mat4.create();
+  mat4.identity(view);
   mat4.inverse(this.localToWorld, view);
   return view;
 }
 
 Camera.prototype.translate = function(translation) {
   mat4.translate(this.localToWorld, translation);
+}
+
+Camera.prototype.rotate = function(degrees, axis) {
+  mat4.rotate(this.localToWorld, Math.PI / 2.0, axis);
 }

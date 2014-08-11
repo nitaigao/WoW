@@ -33,6 +33,10 @@ WebGLRenderer.prototype.beginFrame = function() {
   this.gl.clearColor(this.clearColor.red, this.clearColor.green, this.clearColor.blue, this.clearColor.alpha);
   this.gl.enable(this.gl.DEPTH_TEST);
   this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+
+  this.gl.frontFace(this.gl.CCW);
+  this.gl.cullFace(this.gl.BACK);
+  this.gl.enable(this.gl.CULL_FACE);
 }
 
 WebGLRenderer.prototype.createVertexBuffer = function(vertices, normals, indices, itemSize, numItems) {
@@ -77,7 +81,7 @@ WebGLRenderer.prototype.compileShaderSource = function(shaderType, sourceCode) {
   if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
     console.error("Error compiling shader source:", sourceCode)
     console.error(this.gl.getShaderInfoLog(shader));
-    return null;
+    throw "Could not compile shader"
   }
 
   return shader;

@@ -12,16 +12,26 @@ Shader.prototype.compile = function(renderer, vertexSource, fragmentSource) {
   renderer.gl.linkProgram(this.shaderProgram);
 
   if (!renderer.gl.getProgramParameter(this.shaderProgram, renderer.gl.LINK_STATUS)) {
-    console.error("Could not link shader");
+    console.error(renderer.gl.getProgramInfoLog(this.shaderProgram));
+    throw "Could not link shader"
   }
 
-  // console.log(renderer.gl.getAttribLocation(this.shaderProgram, "position"));
   renderer.gl.enableVertexAttribArray(0);
   renderer.gl.enableVertexAttribArray(1);
 }
 
 Shader.prototype.use = function(renderer) {
   renderer.gl.useProgram(this.shaderProgram);
+}
+
+Shader.prototype.setUniformV = function(renderer, name, values) {
+  var uniformLocation = renderer.gl.getUniformLocation(this.shaderProgram, name);
+  renderer.gl.uniform3fv(uniformLocation, values);
+}
+
+Shader.prototype.setUniform3 = function(renderer, name, value) {
+  var uniformLocation = renderer.gl.getUniformLocation(this.shaderProgram, name);
+  renderer.gl.uniformMatrix3fv(uniformLocation, false, value);
 }
 
 Shader.prototype.setUniform = function(renderer, name, value) {

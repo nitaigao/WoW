@@ -17,6 +17,6 @@ Wrapper.prototype.run = function() {
   this.app.init(canvas);
   this.animate(0);
 
-  var scenePath = $("body").data("scene");
+  var scenePath = $("body").data("scene") + "?t=" + Math.random();
   this.app.loadScene(scenePath);
 }

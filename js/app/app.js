@@ -27,9 +27,10 @@ App.prototype.render = function() {
 
   var view = camera.view();
 
+  var lights = this.scene.allLights();
   var nodes = this.scene.allNodes();
   _.each(nodes, function(node) {
-    node.render(this.renderer, projection, view)
+    node.render(this.renderer, lights, projection, view)
   }, this);
 }
 
@@ -40,7 +41,7 @@ App.prototype.update = function(time) {
   _.each(nodes, function(node) {
     var rotation = mat4.create();
     mat4.identity(rotation);
-    mat4.rotate(rotation, dt, [1.0, 1.0, 0.0]);
+    mat4.rotate(rotation, dt, [0.0, 1.0, 0.0]);
     mat4.multiply(node.localToWorld, rotation, node.localToWorld);
   }, this);
 }

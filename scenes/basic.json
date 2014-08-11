@@ -1,7 +1,21 @@
 {
   "models" : [
     {
-      "path" : "/models/cube.json" 
+      "path" : "/models/cube.json"
+    }
+  ],
+  "lights" : [
+    {
+      "position" : {
+        "x" : 0,
+        "y" : 0,
+        "z" : 40
+      },
+      "color" : {
+        "r" : 0.6,
+        "g" : 0.3,
+        "b" : 0.8
+      }
     }
   ]
 }
