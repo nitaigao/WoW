@@ -28,7 +28,7 @@ BlinnPhongMaterial.prototype.activate = function(renderer, lights, projection, v
   var invTransWorld = mat4.create();
   mat4.identity(invTransWorld);
 
-  mat4.inverse(modelView, invTransWorld);
+  mat4.inverse(model, invTransWorld);
   mat4.transpose(invTransWorld, invTransWorld);
 
   this.shader.setUniform(renderer, "normalMatrix", invTransWorld);

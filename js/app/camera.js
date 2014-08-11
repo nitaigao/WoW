@@ -14,6 +14,6 @@ Camera.prototype.translate = function(translation) {
   mat4.translate(this.localToWorld, translation);
 }
 
-Camera.prototype.rotate = function(degrees, axis) {
-  mat4.rotate(this.localToWorld, Math.PI / 2.0, axis);
+Camera.prototype.rotate = function(radians, axis) {
+  mat4.rotate(this.localToWorld, radians, axis);
 }

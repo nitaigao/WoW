@@ -5,6 +5,7 @@ function Mesh() {
 Mesh.prototype.init = function(renderer, vertices, normals, indices) {
   this.localToWorld = mat4.create();
   mat4.identity(this.localToWorld);
+  mat4.translate(this.localToWorld, [0, 0, -10], this.localToWorld)
   this.material = new BlinnPhongMaterial();
   this.buffer = renderer.createVertexBuffer(vertices, normals, indices, 3, indices.length);
 }
