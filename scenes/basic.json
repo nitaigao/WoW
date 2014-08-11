@@ -1,7 +1,10 @@
 {
   "models" : [
     {
-      "path" : "/models/cube.json"
+      "path" : "/models/floor.json"
+    },
+    {
+      "path" : "/models/pandaren.json"
     }
   ],
   "lights" : [

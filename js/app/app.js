@@ -9,6 +9,7 @@ function App() {
 App.prototype.init = function(canvas) {
   this.renderer = new WebGLRenderer(canvas);
   this.renderer.init();
+  this.camera.translate([0, 1.8, 0]);
 }
 
 App.prototype.loadScene = function(path) {
@@ -27,9 +28,11 @@ App.prototype.render = function() {
 
   var lights = this.scene.allLights();
   var nodes = this.scene.allNodes();
-  _.each(nodes, function(node) {
-    node.render(this.renderer, lights, projection, view)
-  }, this);
+
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    node.render(this.renderer, lights, projection, view);
+  }
 }
 
 App.prototype.update = function(time) {
@@ -38,11 +41,11 @@ App.prototype.update = function(time) {
 
   this.controls.update(dt);
 
-  var nodes = this.scene.allNodes();
-  _.each(nodes, function(node) {
-    var rotation = mat4.create();
-    mat4.identity(rotation);
-    // mat4.rotate(rotation, dt, [0.0, 1.0, 0.0]);
-    mat4.multiply(node.localToWorld, rotation, node.localToWorld);
-  }, this);
+  // var nodes = this.scene.allNodes();
+  // _.each(nodes, function(node) {
+  //   var rotation = mat4.create();
+  //   mat4.identity(rotation);
+  //   // mat4.rotate(rotation, dt, [0.0, 1.0, 0.0]);
+  //   mat4.multiply(node.localToWorld, rotation, node.localToWorld);
+  // }, this);
 }

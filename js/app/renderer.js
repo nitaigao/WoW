@@ -70,10 +70,14 @@ WebGLRenderer.prototype.renderBuffer = function(buffer) {
   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer.normalsBuffer);
   this.gl.vertexAttribPointer(1, buffer.itemSize, this.gl.FLOAT, false, 0, 0);
 
+  this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
+
   this.gl.drawElements(this.gl.TRIANGLES, buffer.numItems, this.gl.UNSIGNED_SHORT, 0);
 }
 
 WebGLRenderer.prototype.compileShaderSource = function(shaderType, sourceCode) {
+
+  console.log("begin shader compilation");
   var shader = this.gl.createShader(shaderType);
   this.gl.shaderSource(shader, sourceCode);
   this.gl.compileShader(shader);
@@ -83,6 +87,8 @@ WebGLRenderer.prototype.compileShaderSource = function(shaderType, sourceCode) {
     console.error(this.gl.getShaderInfoLog(shader));
     throw "Could not compile shader"
   }
+
+  console.log("end shader compilation");
 
   return shader;
 }

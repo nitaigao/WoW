@@ -23,12 +23,18 @@ Scene.prototype.load = function(path, renderer) {
   var self = this;
   $.get(path, function(scene) {
 
-    _.each(scene.models, function(model) {
+    function loadNextModel(models) {
+      var model = models.pop();
       var mesh = new Mesh();
       mesh.load(renderer, model.path + "?t=" + Math.random(), function() {
         self.addNode(mesh);
+        if (models.length) {
+          loadNextModel(models);
+        }
       });
-    });
+    }
+
+    loadNextModel(scene.models);
 
     _.each(scene.lights, function(data) {
       var light = new PointLight(data);
