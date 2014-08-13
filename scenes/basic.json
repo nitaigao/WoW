@@ -1,9 +1,6 @@
 {
   "models" : [
     {
-      "path" : "/models/floor.json"
-    },
-    {
       "path" : "/models/pandaren.json"
     }
   ],

@@ -1,26 +1,41 @@
 function Mesh() {
-  this.localToWorld = null;
-}
+  this.material = new BlinnPhongMaterial();
 
-Mesh.prototype.init = function(renderer, vertices, normals, indices) {
+  this.localToWorld = null;
   this.localToWorld = mat4.create();
   mat4.identity(this.localToWorld);
   mat4.translate(this.localToWorld, [0, 0, -10], this.localToWorld)
-  this.material = new BlinnPhongMaterial();
-  this.buffer = renderer.createVertexBuffer(vertices, normals, indices, 3, indices.length);
+
+  this.submeshes = []
 }
 
 Mesh.prototype.render = function(renderer, lights, projection, view) {
-  this.material.activate(renderer, lights, projection, view, this.localToWorld);
-  renderer.renderBuffer(this.buffer);
+  var self = this;
+  _.each(this.submeshes, function(submesh) {
+    submesh.render(renderer, lights, projection, view, self.localToWorld);
+  });
 }
 
 Mesh.prototype.load = function(renderer, path, cb) {
   var self = this;
   $.get(path, function(data) {
-    self.init(renderer, data.vertices, data.normals, data.indices);
-    self.material.init(renderer, function() {
-      cb();
-    });
+    var submeshesData = data.submeshes;
+
+    function loadNextSubMesh(submeshesData) {
+      var submeshData = submeshesData.pop();
+      var submesh = new SubMesh();
+      submesh.init(renderer, submeshData.vertices, submeshData.normals, submeshData.indices, function() {
+        self.submeshes.push(submesh);
+        if (submeshesData.length) {
+          loadNextSubMesh(submeshesData)
+        }
+        else {
+          console.log("finished loading");
+          cb();
+        }
+      });
+    }
+
+    loadNextSubMesh(submeshesData)
   });
 }
