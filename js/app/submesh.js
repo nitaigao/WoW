@@ -12,7 +12,6 @@ SubMesh.prototype.init = function(renderer, vertices, normals, indices, cb) {
 }
 
 SubMesh.prototype.render = function(renderer, lights, projection, view, model) {
-  console.log(model);
   this.material.activate(renderer, lights, projection, view, model);
   renderer.renderBuffer(this.buffer);
 }

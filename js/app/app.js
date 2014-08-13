@@ -29,10 +29,9 @@ App.prototype.render = function() {
   var lights = this.scene.allLights();
   var nodes = this.scene.allNodes();
 
-  for (var i = 0; i < nodes.length; i++) {
-    var node = nodes[i];
+  _.each(nodes, function(node) {
     node.render(this.renderer, lights, projection, view);
-  }
+  }, this);
 }
 
 App.prototype.update = function(time) {
@@ -40,6 +39,11 @@ App.prototype.update = function(time) {
   this.lastTime = time;
 
   this.controls.update(dt);
+
+  var nodes = this.scene.allNodes();
+  _.each(nodes, function(node) {
+    node.update(time, dt);
+  }, this);
 
   // var nodes = this.scene.allNodes();
   // _.each(nodes, function(node) {

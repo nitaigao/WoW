@@ -77,7 +77,7 @@ WebGLRenderer.prototype.renderBuffer = function(buffer) {
 
 WebGLRenderer.prototype.compileShaderSource = function(shaderType, sourceCode) {
 
-  console.log("begin shader compilation");
+  // console.log("begin shader compilation");
   var shader = this.gl.createShader(shaderType);
   this.gl.shaderSource(shader, sourceCode);
   this.gl.compileShader(shader);
@@ -88,7 +88,7 @@ WebGLRenderer.prototype.compileShaderSource = function(shaderType, sourceCode) {
     throw "Could not compile shader"
   }
 
-  console.log("end shader compilation");
+  // console.log("end shader compilation");
 
   return shader;
 }

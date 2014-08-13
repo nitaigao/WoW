@@ -1,7 +1,7 @@
 {
   "models" : [
     {
-      "path" : "/models/pandaren.json"
+      "path" : "/models/animated_plane.json"
     }
   ],
   "lights" : [
