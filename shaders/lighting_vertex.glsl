@@ -15,6 +15,8 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 
+uniform vec3 options;
+
 varying vec4 vNormal;
 varying vec4 vPosition;
 
@@ -22,11 +24,19 @@ void main() {
   vNormal = vec4(normal.xyz, 1.0);
   vPosition = model * position;
 
-  vec4 skinnedPosition = 
-    boneweight.w * bones[int(boneindex.w)] * position + 
-    boneweight.z * bones[int(boneindex.z)] * position + 
-    boneweight.y * bones[int(boneindex.y)] * position + 
-    boneweight.x * bones[int(boneindex.x)] * position;
+  bool useSkinning = bool(options.x);
 
-  gl_Position = projection * view * model * skinnedPosition;
+  if (useSkinning) {
+    vec4 skinnedPosition = 
+      boneweight.w * bones[int(boneindex.w)] * position + 
+      boneweight.z * bones[int(boneindex.z)] * position + 
+      boneweight.y * bones[int(boneindex.y)] * position + 
+      boneweight.x * bones[int(boneindex.x)] * position;
+
+    gl_Position = projection * view * model * skinnedPosition;
+  }
+
+  else {
+    gl_Position = projection * view * model * position;
+  }
 }

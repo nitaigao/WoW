@@ -11,18 +11,25 @@ function Mesh() {
 
 Mesh.prototype.render = function(renderer, lights, projection, view) {
   _.each(this.submeshes, function(submesh) {
-    var skeletons = _.where(this.skeletons, function(skeleton) {
-      skeleton.name == submesh.skeleton;
-    }, this);
+    var skels = []
+    for (var i = 0; i < this.skeletons.length; i++) {
+      var skeleton = this.skeletons[i];
+      if (skeleton.name === submesh.skeleton) {
+        skels.push(skeleton);
+        break;
+      }
+    }
 
-    var skeleton = _.first(skeletons);
-
+    var skeleton = _.first(skels);
     var boneData = []
-    _.each(skeleton.bones, function(bone) {
-      _.each(bone, function(element) {
-        boneData.push(element);
-      }, this)
-    }, this);
+
+    if (skeleton) {
+      _.each(skeleton.bones, function(bone) {
+        _.each(bone, function(element) {
+          boneData.push(element);
+        }, this)
+      }, this);
+    }
 
     submesh.render(renderer, lights, boneData, projection, view, this.localToWorld);
   }, this);
@@ -67,8 +74,6 @@ Mesh.prototype.load = function(renderer, path, cb) {
         });
 
         var filler = 4 - weights.length
-        // console.log(filler);
-
         for (var i = 0; i <  filler; i++) {
           boneIndices.push(0);
           boneWeights.push(0);
