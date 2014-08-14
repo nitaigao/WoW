@@ -58,19 +58,22 @@ Mesh.prototype.load = function(renderer, path, cb) {
       var submesh = new SubMesh();
       submesh.skeleton = submeshData.armature;
 
-      var boneIndices = [
-        0, 0, 0, 0, 
-        0, 0, 0, 0, 
-        0, 0, 0, 0, 
-        0, 0, 0, 0
-      ]
+      var boneIndices = []
+      var boneWeights = []
+      _.each(submeshData.weights, function(weights) {
+        _.each(weights, function(weight) {
+          boneIndices.push(weight.index);
+          boneWeights.push(weight.weight);
+        });
 
-      var boneWeights = [
-        1.0, 0.0, 0.0, 0.0, 
-        1.0, 0.0, 0.0, 0.0, 
-        1.0, 0.0, 0.0, 0.0, 
-        1.0, 0.0, 0.0, 0.0
-      ]
+        var filler = 4 - weights.length
+        // console.log(filler);
+
+        for (var i = 0; i <  filler; i++) {
+          boneIndices.push(0);
+          boneWeights.push(0);
+        } 
+      });
 
       submesh.init(renderer, submeshData.vertices, submeshData.normals, submeshData.indices, boneIndices, boneWeights, function() {
         self.submeshes.push(submesh);
