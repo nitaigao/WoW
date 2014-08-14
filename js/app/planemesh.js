@@ -17,7 +17,11 @@ PlaneMesh.prototype.init = function(renderer) {
   this.buffer = renderer.createVertexBuffer(vertices, indices, 3, 6);
 }
 
-PlaneMesh.prototype.render = function(renderer, projection, view) {
-  this.material.activate(renderer, projection, view);
+PlaneMesh.prototype.render = function(renderer, lights, projection, view) {
+  this.material.activate(renderer,lights, projection, view);
   renderer.renderBuffer(this.buffer);
+}
+
+PlaneMesh.prototype.update = function(time, dt) {
+
 }

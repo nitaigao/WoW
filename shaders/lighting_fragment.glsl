@@ -13,6 +13,8 @@ varying vec4 vPosition;
 varying vec4 vNormal;
 
 void main() {
+  vec3 diffuse = vec3(0.0, 0.0, 0.0);
+
   for (int i = 0; i < MAX_POINT_LIGHTS; i++) {
     vec3 lightPosition = PointLightPosition[i];
 
@@ -27,8 +29,8 @@ void main() {
     float dotProduct = dot(lightDirN, vNormalVN);
     vec3 lightColor = PointLightColor[i];
 
-    vec3 diffuse = lightColor * dotProduct;
-
-    gl_FragColor = vec4(diffuse, 1.0);
+    diffuse += lightColor * dotProduct;
   }
+
+  gl_FragColor = vec4(diffuse, 1.0);
 }

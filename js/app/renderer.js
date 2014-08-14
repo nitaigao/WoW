@@ -39,7 +39,7 @@ WebGLRenderer.prototype.beginFrame = function() {
   this.gl.enable(this.gl.CULL_FACE);
 }
 
-WebGLRenderer.prototype.createVertexBuffer = function(vertices, normals, indices, itemSize, numItems) {
+WebGLRenderer.prototype.createVertexBuffer = function(vertices, normals, indices, boneIndices, boneWeights, numItems) {
   var buffer = {}
 
   var vertexBuffer = this.gl.createBuffer();
@@ -50,6 +50,14 @@ WebGLRenderer.prototype.createVertexBuffer = function(vertices, normals, indices
   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalsBuffer);
   this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(normals), this.gl.STATIC_DRAW);
 
+  var boneIndicesBuffer = this.gl.createBuffer();
+  this.gl.bindBuffer(this.gl.ARRAY_BUFFER, boneIndicesBuffer);
+  this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(boneIndices), this.gl.STATIC_DRAW);
+
+  var boneWeightsBuffer = this.gl.createBuffer();
+  this.gl.bindBuffer(this.gl.ARRAY_BUFFER, boneWeightsBuffer);
+  this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(boneWeights), this.gl.STATIC_DRAW);
+
   var indexBuffer = this.gl.createBuffer();
   this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
   this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), this.gl.STATIC_DRAW);
@@ -57,21 +65,14 @@ WebGLRenderer.prototype.createVertexBuffer = function(vertices, normals, indices
   buffer.vertexBuffer = vertexBuffer;
   buffer.normalsBuffer = normalsBuffer;
   buffer.indexBuffer = indexBuffer;
-  buffer.itemSize = itemSize;
+  buffer.boneIndicesBuffer = boneIndicesBuffer;
+  buffer.boneWeightsBuffer = boneWeightsBuffer;
   buffer.numItems = numItems;
 
   return buffer;
 }
 
-WebGLRenderer.prototype.renderBuffer = function(buffer) {
-  this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer.vertexBuffer);
-  this.gl.vertexAttribPointer(0, buffer.itemSize, this.gl.FLOAT, false, 0, 0);
-
-  this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer.normalsBuffer);
-  this.gl.vertexAttribPointer(1, buffer.itemSize, this.gl.FLOAT, false, 0, 0);
-
-  this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
-
+WebGLRenderer.prototype.renderBuffer = function(buffer, shaderProgram) {
   this.gl.drawElements(this.gl.TRIANGLES, buffer.numItems, this.gl.UNSIGNED_SHORT, 0);
 }
 

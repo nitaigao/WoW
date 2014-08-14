@@ -7,6 +7,7 @@ BasicMaterial.prototype.init = function(renderer) {
 
 BasicMaterial.prototype.activate = function(renderer, lights, projection, view) {
   this.shader.use(renderer);
+  console.log(view)
   this.shader.setUniform(renderer, "projection", projection);
   this.shader.setUniform(renderer, "view", view);
 }

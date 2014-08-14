@@ -3,7 +3,7 @@ function App() {
   this.scene = new Scene();
   this.lastTime = 0;
   this.camera = new Camera();
-  this.controls = new FlyControls(this.camera);
+  // this.controls = new FlyControls(this.camera);
 }
 
 App.prototype.init = function(canvas) {
@@ -22,7 +22,7 @@ App.prototype.render = function() {
 
   var projection = mat4.create();
   mat4.identity(projection);
-  mat4.perspective(70, this.renderer.gl.viewportWidth / this.renderer.gl.viewportHeight, 0.1, 100.0, projection);
+  mat4.perspective(projection, 70, this.renderer.gl.viewportWidth / this.renderer.gl.viewportHeight, 0.1, 100.0);
 
   var view = this.camera.view();
 
@@ -38,7 +38,7 @@ App.prototype.update = function(time) {
   var dt = (time - this.lastTime) / 1000;
   this.lastTime = time;
 
-  this.controls.update(dt);
+  // this.controls.update(dt);
 
   var nodes = this.scene.allNodes();
   _.each(nodes, function(node) {

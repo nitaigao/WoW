@@ -18,10 +18,18 @@ Shader.prototype.compile = function(renderer, vertexSource, fragmentSource) {
 
   renderer.gl.enableVertexAttribArray(0);
   renderer.gl.enableVertexAttribArray(1);
+  renderer.gl.enableVertexAttribArray(2);
+  renderer.gl.enableVertexAttribArray(3);
 }
 
 Shader.prototype.use = function(renderer) {
   renderer.gl.useProgram(this.shaderProgram);
+}
+
+Shader.prototype.bindBuffer = function(renderer, name, count, buffer) {
+  renderer.gl.bindBuffer(renderer.gl.ARRAY_BUFFER, buffer);
+  var location = renderer.gl.getAttribLocation(this.shaderProgram, name);
+  renderer.gl.vertexAttribPointer(location, count, renderer.gl.FLOAT, false, 0, 0);
 }
 
 Shader.prototype.setUniformV = function(renderer, name, values) {
@@ -37,4 +45,9 @@ Shader.prototype.setUniform3 = function(renderer, name, value) {
 Shader.prototype.setUniform = function(renderer, name, value) {
   var uniformLocation = renderer.gl.getUniformLocation(this.shaderProgram, name);
   renderer.gl.uniformMatrix4fv(uniformLocation, false, value);
+}
+
+Shader.prototype.setUniformMfv = function(renderer, name, values) {
+  var uniformLocation = renderer.gl.getUniformLocation(this.shaderProgram, name);
+  renderer.gl.uniformMatrix4fv(uniformLocation, false, values);
 }
