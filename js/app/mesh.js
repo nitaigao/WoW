@@ -38,7 +38,7 @@ Mesh.prototype.render = function(renderer, lights, projection, view) {
 Mesh.prototype.update = function(time, dt) {
   // var translation = Math.sin(time * 0.001);
   // _.each(this.skeletons, function(skeleton) {
-  //   skeleton.translation = [translation * 10, 0, 0];
+  //   mat4.translate(skeleton.bones[0].transform, skeleton.bones[0].transform, [Math.cos(time * 0.01) * 0.1, 0, 0])
   // });
 }
 
