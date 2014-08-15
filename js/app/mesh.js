@@ -25,7 +25,7 @@ Mesh.prototype.render = function(renderer, lights, projection, view) {
 
     if (skeleton) {
       _.each(skeleton.bones, function(bone) {
-        _.each(bone, function(element) {
+        _.each(bone.finalTransform(), function(element) {
           boneData.push(element);
         }, this)
       }, this);
@@ -49,10 +49,16 @@ Mesh.prototype.load = function(renderer, path, cb) {
       var skeleton = new Skeleton();
       skeleton.name = armatureData.name;
       _.each(armatureData.bones, function(boneData) {
+
         var translation = vec3.fromValues(boneData.translation.x, boneData.translation.y, boneData.translation.z)
         var orientation = quat.fromValues(boneData.orientation.x, boneData.orientation.y, boneData.orientation.z, boneData.orientation.w);
-        var bone = mat4.create();
-        mat4.fromRotationTranslation(bone, orientation, translation);
+
+        var bone = new Bone();
+        if (boneData.parent != -1) {
+          bone.parent = skeleton.bones[boneData.parent]
+        }
+        mat4.fromRotationTranslation(bone.transform, orientation, translation);
+        
         skeleton.bones.push(bone)
       });
       self.skeletons.push(skeleton);
