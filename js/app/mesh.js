@@ -7,39 +7,48 @@ function Mesh() {
 
   this.submeshes = []
   this.skeletons = []
+  this.animations = []
+  this.activeAnimations = []
+}
+
+Mesh.prototype.playAnimation = function(name) {
+  this.activeAnimations.length = 0;
+  this.activeAnimations = _.where(this.animations, {name: name});
 }
 
 Mesh.prototype.render = function(renderer, lights, projection, view) {
   _.each(this.submeshes, function(submesh) {
-    var skels = []
-    for (var i = 0; i < this.skeletons.length; i++) {
-      var skeleton = this.skeletons[i];
-      if (skeleton.name === submesh.skeleton) {
-        skels.push(skeleton);
-        break;
-      }
-    }
-
-    var skeleton = _.first(skels);
     var boneData = []
+    var boneNormalData = []
 
-    if (skeleton) {
+    _.each(this.activeAnimations, function(animation) {
+      var skeleton = animation.frameSkeleton()
       _.each(skeleton.bones, function(bone) {
-        _.each(bone.finalTransform(), function(element) {
+        var boneTransform = bone.finalTransform();
+
+        _.each(boneTransform, function(element) {
           boneData.push(element);
         }, this)
-      }, this);
-    }
 
-    submesh.render(renderer, lights, boneData, projection, view, this.localToWorld);
+        var invTransBone = mat4.create();
+        mat4.identity(invTransBone);
+        mat4.invert(invTransBone, boneTransform);
+        mat4.transpose(invTransBone, invTransBone);
+
+        _.each(invTransBone, function(element) {
+          boneNormalData.push(element);
+        }, this)
+      }, this);
+    });
+
+    submesh.render(renderer, lights, boneData, boneNormalData, projection, view, this.localToWorld);
   }, this);
 }
 
 Mesh.prototype.update = function(time, dt) {
-  // var translation = Math.sin(time * 0.001);
-  // _.each(this.skeletons, function(skeleton) {
-  //   mat4.translate(skeleton.bones[0].transform, skeleton.bones[0].transform, [Math.cos(time * 0.01) * 0.1, 0, 0])
-  // });
+  _.each(this.activeAnimations, function(activeAnimation) {
+    activeAnimation.step(dt);
+  });
 }
 
 Mesh.prototype.load = function(renderer, path, cb) {
@@ -63,6 +72,33 @@ Mesh.prototype.load = function(renderer, path, cb) {
       });
       self.skeletons.push(skeleton);
     });
+
+    _.each(data.animations, function(animationData) {
+      var animation = new Animation()
+      animation.name = animationData.name
+      _.each(animationData.frames, function(frameData) {
+        var animationFrame = new AnimationFrame();
+        animationFrame.time = frameData.time;
+        _.each(frameData.armatures, function(armatureData) {
+          var skeleton = new Skeleton();
+          skeleton.name = armatureData.name;
+          _.each(armatureData.bones, function(boneData) {
+            var translation = vec3.fromValues(boneData.translation.x, boneData.translation.y, boneData.translation.z)
+            var orientation = quat.fromValues(boneData.orientation.x, boneData.orientation.y, boneData.orientation.z, boneData.orientation.w);
+
+            var bone = new Bone();
+            if (boneData.parent != -1) {
+              bone.parent = skeleton.bones[boneData.parent]
+            }
+            mat4.fromRotationTranslation(bone.transform, orientation, translation);
+            skeleton.bones.push(bone)
+          });
+          animationFrame.skeletons.push(skeleton);
+        });
+        animation.frames.push(animationFrame)
+      }, this);
+      this.animations.push(animation)
+    }, self);
 
     var submeshesData = data.submeshes;
 

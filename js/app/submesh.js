@@ -11,8 +11,8 @@ SubMesh.prototype.init = function(renderer, vertices, normals, indices, boneIndi
   })
 }
 
-SubMesh.prototype.render = function(renderer, lights, bones, boneWeights, projection, view, model) {
-  this.material.activate(renderer, lights, bones, boneWeights, projection, view, model);
+SubMesh.prototype.render = function(renderer, lights, bones, boneNormal, projection, view, model) { 
+  this.material.activate(renderer, lights, bones, boneNormal, projection, view, model);
   this.material.bindBuffers(renderer, this.buffer)
 
   renderer.renderBuffer(this.buffer);

@@ -27,6 +27,7 @@ Scene.prototype.load = function(path, renderer) {
       var model = models.pop();
       var mesh = new Mesh();
       mesh.load(renderer, model.path + "?t=" + Math.random(), function() {
+        mesh.playAnimation("ArmatureAction")
         self.addNode(mesh);
         if (models.length) {
           loadNextModel(models);

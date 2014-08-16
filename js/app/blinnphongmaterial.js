@@ -20,7 +20,7 @@ BlinnPhongMaterial.prototype.bindBuffers = function(renderer, buffer) {
   this.shader.bindBuffer(renderer, "boneweight", 4, buffer.boneWeightsBuffer);
 }
 
-BlinnPhongMaterial.prototype.activate = function(renderer, lights, bones, projection, view, model) {
+BlinnPhongMaterial.prototype.activate = function(renderer, lights, bones, boneNormal, projection, view, model) {
   this.shader.use(renderer);
 
   this.shader.setUniform(renderer, "projection", projection);
@@ -30,6 +30,7 @@ BlinnPhongMaterial.prototype.activate = function(renderer, lights, bones, projec
   this.shader.setUniformV(renderer, "options", [bones.length, 0, 0])
   if (bones.length) {
     this.shader.setUniformMfv(renderer, "bones", bones);
+    this.shader.setUniformMfv(renderer, "bonesnormal", boneNormal);
   }
 
   var invTransWorld = mat4.create();
